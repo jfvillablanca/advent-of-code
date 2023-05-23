@@ -4,23 +4,24 @@ import path from "path";
 const inputFileName = "2022-01-input.txt";
 
 const logic = (input: string) => {
-    const elfArr = [];
     const inputArr = [...input.split("\n")].map((x) =>
-        x === "" ? "X" : Number(x)
+        x === "" ? "" : Number(x)
     );
 
-    let tempArr: number[] = [];
-    for (const num of inputArr) {
-        if (num === "X") {
-            elfArr.push(tempArr.reduce((acc, cur) => acc + cur, 0));
-            tempArr = [];
+    const outputArr = inputArr.reduce((acc: number[], cur: number | "") => {
+        if (cur === "") {
+            acc.push(0);
         } else {
-            tempArr.push(num);
+            const lastIndex = acc.length - 1;
+            acc[lastIndex] += typeof cur === "number" ? cur : 0;
         }
-    }
-    console.log(elfArr.sort((a, b) => b - a)[0]);
+        return acc;
+    }, []);
+
+    console.log("Highest total num: ", outputArr.sort((a, b) => b - a)[0]);
     console.log(
-        elfArr
+        "Total num of top 3: ",
+        outputArr
             .sort((a, b) => b - a)
             .slice(0, 3)
             .reduce((acc, cur) => acc + cur, 0)
