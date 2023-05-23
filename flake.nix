@@ -35,6 +35,8 @@
             rustfmt
             rust-analyzer
             clippy
+
+            nodejs
           ];
           env = [ ];
         };
