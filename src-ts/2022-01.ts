@@ -20,7 +20,7 @@ const logic = (input: string) => {
 
     console.log("Highest total num: ", outputArr.sort((a, b) => b - a)[0]);
     console.log(
-        "Total num of top 3: ",
+        "Total sum of top 3: ",
         outputArr
             .sort((a, b) => b - a)
             .slice(0, 3)
