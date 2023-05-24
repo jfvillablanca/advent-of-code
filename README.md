@@ -6,6 +6,7 @@
 ```
 
 ### Rust
+Navigate to top-level project directory.
 ```console
-[user@system:~]$ cargo run path/to/rs-file.rs
+[user@system:~]$ cargo run --bin rs-filename
 ```
