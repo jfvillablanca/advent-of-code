@@ -25,10 +25,10 @@ fn logic(buffered: BufReader<File>) {
     // output_arr.sort(); // sort in ascending order
     output_arr.sort_by(|a, b| b.cmp(a));
 
-    // println!("Highest total num: {}", output_arr.last().unwrap_or(&0)); // if sorted in ascending order
-    println!("Highest total num: {}", output_arr[0]);
+    // println!("Part 1 | Highest total num: {}", output_arr.last().unwrap_or(&0)); // if sorted in ascending order
+    println!("Part 1 | Highest total num: {}", output_arr[0]);
     println!(
-        "Total sum of top 3: {}",
+        "Part 2 | Total sum of top 3: {}",
         // output_arr[output_arr.len() - 3..] // if sorted in ascending order
         output_arr[..3]
             .iter()

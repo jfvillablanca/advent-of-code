@@ -18,9 +18,9 @@ const logic = (input: string) => {
         return acc;
     }, []);
 
-    console.log("Highest total num: ", outputArr.sort((a, b) => b - a)[0]);
+    console.log("Part 1 | Highest total num: ", outputArr.sort((a, b) => b - a)[0]);
     console.log(
-        "Total sum of top 3: ",
+        "Part 2 | Total sum of top 3: ",
         outputArr
             .sort((a, b) => b - a)
             .slice(0, 3)
