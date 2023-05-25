@@ -9,8 +9,10 @@ fn logic(buffered: BufReader<File>) {
         .lines()
         .filter_map(|unparsed_line| unparsed_line.ok())
         .fold((0, 0), |mut acc, cur| {
-            let collected_line = cur.split(" ").collect::<Vec<&str>>();
-            let (opponent, yours) = (collected_line[0], collected_line[1]);
+            let mut collected_line = cur.split_whitespace();
+            let opponent = collected_line.next().unwrap_or("");
+            let yours = collected_line.next().unwrap_or("");
+
             let mut acc_strategy_one = 0;
             let mut acc_strategy_two = 0;
 
