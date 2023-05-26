@@ -16,9 +16,28 @@ const logic = (input: string) => {
         return acc;
     }, 0);
 
+    const priorityByElfGroup = inputArr.reduce((acc, _, index) => {
+        if (index % 3 === 0) {
+            const [rucksackOne, rucksackTwo, rucksackThree] = [
+                ...inputArr.slice(index, index + 3),
+            ].map((x) => [...x]);
+
+            const commonItem = findCommonElements(
+                rucksackOne,
+                findCommonElements(rucksackTwo, rucksackThree)
+            )[0];
+            acc += mapCharToValue(commonItem);
+        }
+        return acc;
+    }, 0);
+
     console.log(
         "Part 1 | Sum of priorities between rucksack compartments: ",
         priorityByCompartment
+    );
+    console.log(
+        "Part 2 | Sum of priorities between elf rucksack groups of 3: ",
+        priorityByElfGroup
     );
 };
 
