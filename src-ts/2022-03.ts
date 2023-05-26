@@ -6,15 +6,19 @@ const inputFileName = "2022-03-input.txt";
 const logic = (input: string) => {
     const inputArr = [...input.split("\n")].slice(0, -1);
 
-    const sumOfPriorities = inputArr.reduce((acc, currentLine) => {
+    const priorityByCompartment = inputArr.reduce((acc, currentLine) => {
         const [compartmentOne, compartmentTwo] = splitLine(currentLine);
-        acc += mapCharToValue(findCommonItem(compartmentOne, compartmentTwo));
+        const commonItem = findCommonElements(
+            compartmentOne,
+            compartmentTwo
+        )[0];
+        acc += mapCharToValue(commonItem);
         return acc;
     }, 0);
 
     console.log(
         "Part 1 | Sum of priorities between rucksack compartments: ",
-        sumOfPriorities
+        priorityByCompartment
     );
 };
 
@@ -23,10 +27,16 @@ const splitLine = (line: string): [string[], string[]] => {
     return [[...line.slice(0, halfIndex)], [...line.slice(halfIndex)]];
 };
 
-const findCommonItem = (a: string[], b: string[]) => {
-    return a.find((itemOne) => {
-        return b.some((itemTwo) => itemOne === itemTwo);
-    }) as string;
+const findCommonElements = (a: string[], b: string[]) => {
+    const set = new Set(a);
+    const commonElements = [];
+
+    for (let i = 0; i < b.length; i++) {
+        if (set.has(b[i])) {
+            commonElements.push(b[i]);
+        }
+    }
+    return [...new Set(commonElements)];
 };
 
 const mapCharToValue = (c: string): number => {
