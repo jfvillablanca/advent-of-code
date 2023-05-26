@@ -8,10 +8,7 @@ const logic = (input: string) => {
 
     const sumOfPriorities = inputArr.reduce((acc, currentLine) => {
         const [compartmentOne, compartmentTwo] = splitLine(currentLine);
-        const commonItem = compartmentOne.find((itemOne) => {
-            return compartmentTwo.find((itemTwo) => itemOne === itemTwo);
-        }) as string;
-        acc += mapCharToValue(commonItem);
+        acc += mapCharToValue(findCommonItem(compartmentOne, compartmentTwo));
         return acc;
     }, 0);
 
@@ -24,6 +21,12 @@ const logic = (input: string) => {
 const splitLine = (line: string): [string[], string[]] => {
     const halfIndex = line.length / 2;
     return [[...line.slice(0, halfIndex)], [...line.slice(halfIndex)]];
+};
+
+const findCommonItem = (a: string[], b: string[]) => {
+    return a.find((itemOne) => {
+        return b.some((itemTwo) => itemOne === itemTwo);
+    }) as string;
 };
 
 const mapCharToValue = (c: string): number => {
