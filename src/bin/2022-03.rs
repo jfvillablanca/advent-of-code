@@ -11,23 +11,23 @@ struct PrioritySum {
 }
 
 fn logic(buffered: BufReader<File>) {
-    let sum = buffered
+    let buffered_map = buffered
         .lines()
         .filter_map(|unparsed_line| unparsed_line.ok())
-        .enumerate()
-        .fold(
-            PrioritySum {
-                priority_by_compartment: 0,
-                // priority_by_elf_group: 0,
-            },
-            |mut acc, (_index, current_line)| {
-                let (compartment_one, compartment_two) =
-                    current_line.split_at(current_line.len() / 2);
-                acc.priority_by_compartment +=
-                    map_char_to_value(find_common_elements(&[compartment_one, compartment_two])[0]);
-                acc
-            },
-        );
+        .enumerate();
+
+    let mut sum = PrioritySum {
+        priority_by_compartment: 0,
+    };
+
+    let mut collector = Vec::new();
+    for (index, current_line) in buffered_map {
+        let (compartment_one, compartment_two) = current_line.split_at(current_line.len() / 2);
+        let common_elements = find_common_elements(vec![
+            compartment_one.to_string(),
+            compartment_two.to_string(),
+        ])[0];
+        sum.priority_by_compartment += map_char_to_value(common_elements);
 
     assert_eq!(sum.priority_by_compartment, 7553);
     // assert_eq!(sum.priority_by_elf_group, 2758);
@@ -53,7 +53,7 @@ fn map_char_to_value(c: char) -> i32 {
     }
 }
 
-fn find_common_elements(strings: &[&str]) -> Vec<char> {
+fn find_common_elements(strings: Vec<String>) -> Vec<char> {
     if strings.is_empty() {
         return Vec::new();
     }
