@@ -10,7 +10,6 @@ struct OverlapSum {
 }
 
 fn logic(buffered: BufReader<File>) {
-    #![allow(unused_variables)]
     let sum: OverlapSum = buffered
         .lines()
         .filter_map(|unparsed_number| unparsed_number.ok())
