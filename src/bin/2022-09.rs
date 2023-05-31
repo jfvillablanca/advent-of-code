@@ -134,8 +134,7 @@ fn logic(buffered: BufReader<File>) {
         })
         .collect();
 
-    let mut cells_visited: HashSet<RopeSection> = HashSet::new();
-    let (_final_head, _final_tail): (RopeSection, RopeSection) = vector_arr
+    let cells_visited: HashSet<RopeSection> = vector_arr
         .iter()
         .flat_map(|direction| match direction {
             Direction::Up(steps) => std::iter::repeat(Direction::Up(1)).take(*steps as usize),
@@ -143,13 +142,19 @@ fn logic(buffered: BufReader<File>) {
             Direction::Down(steps) => std::iter::repeat(Direction::Down(1)).take(*steps as usize),
             Direction::Right(steps) => std::iter::repeat(Direction::Right(1)).take(*steps as usize),
         })
-        .fold((initial_head, initial_tail), |acc, direction| {
-            let (current_head, current_tail) = acc;
-            let next_head = current_head.calc_next_coordinates(&direction);
-            let next_tail = current_tail.calc_tail_next(&current_head, &next_head);
-            cells_visited.insert(next_tail.clone());
-            (next_head, next_tail)
-        });
+        .fold(
+            (initial_head, initial_tail, HashSet::new()),
+            |acc, direction| {
+                let (current_head, current_tail, mut cells_visited) = acc;
+                let next_head = current_head.calc_next_coordinates(&direction);
+                let next_tail = current_tail.calc_tail_next(&current_head, &next_head);
+                cells_visited.insert(next_tail.clone());
+                (next_head, next_tail, cells_visited)
+            },
+        )
+        .2
+        .into_iter()
+        .collect();
 
     println!(
         "Part 1 | cells visited by the tail of a 2-knot rope: {}",
