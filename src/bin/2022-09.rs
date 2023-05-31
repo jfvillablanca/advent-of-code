@@ -24,44 +24,44 @@ enum HeadRelativeToTail {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
-struct RopeSection {
+struct Knot {
     x: i32,
     y: i32,
 }
 
-impl fmt::Display for RopeSection {
+impl fmt::Display for Knot {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "(x: {}, y: {})", self.x, self.y)
     }
 }
 
-impl RopeSection {
-    fn calc_tail_next(&self, current_head: &RopeSection, next_head: &RopeSection) -> RopeSection {
+impl Knot {
+    fn calc_tail_next(&self, current_head: &Knot, next_head: &Knot) -> Knot {
         match self.calc_relative_direction(next_head) {
-            HeadRelativeToTail::Top => RopeSection {
+            HeadRelativeToTail::Top => Knot {
                 x: next_head.x,
                 y: next_head.y - 1,
             },
-            HeadRelativeToTail::Left => RopeSection {
+            HeadRelativeToTail::Left => Knot {
                 x: next_head.x + 1,
                 y: next_head.y,
             },
-            HeadRelativeToTail::Right => RopeSection {
+            HeadRelativeToTail::Right => Knot {
                 x: next_head.x - 1,
                 y: next_head.y,
             },
-            HeadRelativeToTail::Bottom => RopeSection {
+            HeadRelativeToTail::Bottom => Knot {
                 x: next_head.x,
                 y: next_head.y + 1,
             },
             HeadRelativeToTail::DiagonalOrOverlap => {
                 if self.calc_manhattan_distance(next_head) <= 2 {
-                    RopeSection {
+                    Knot {
                         x: self.x,
                         y: self.y,
                     }
                 } else {
-                    RopeSection {
+                    Knot {
                         x: current_head.x,
                         y: current_head.y,
                     }
@@ -70,11 +70,11 @@ impl RopeSection {
         }
     }
 
-    fn calc_manhattan_distance(&self, section: &RopeSection) -> i32 {
+    fn calc_manhattan_distance(&self, section: &Knot) -> i32 {
         (self.x - section.x).abs() + (self.y - section.y).abs()
     }
 
-    fn calc_relative_direction(&self, head: &RopeSection) -> HeadRelativeToTail {
+    fn calc_relative_direction(&self, head: &Knot) -> HeadRelativeToTail {
         let delta_y = head.y - self.y;
         let delta_x = head.x - self.x;
 
@@ -91,21 +91,21 @@ impl RopeSection {
         }
     }
 
-    fn calc_next_coordinates(&self, direction: &Direction) -> RopeSection {
+    fn calc_next_coordinates(&self, direction: &Direction) -> Knot {
         match direction {
-            Direction::Up(dist) => RopeSection {
+            Direction::Up(dist) => Knot {
                 x: self.x,
                 y: self.y + dist,
             },
-            Direction::Left(dist) => RopeSection {
+            Direction::Left(dist) => Knot {
                 x: self.x - dist,
                 y: self.y,
             },
-            Direction::Down(dist) => RopeSection {
+            Direction::Down(dist) => Knot {
                 x: self.x,
                 y: self.y - dist,
             },
-            Direction::Right(dist) => RopeSection {
+            Direction::Right(dist) => Knot {
                 x: self.x + dist,
                 y: self.y,
             },
@@ -114,8 +114,8 @@ impl RopeSection {
 }
 
 fn logic(buffered: BufReader<File>) {
-    let initial_head = RopeSection { x: 0, y: 0 };
-    let initial_tail = RopeSection { x: 0, y: 0 };
+    let initial_head = Knot { x: 0, y: 0 };
+    let initial_tail = Knot { x: 0, y: 0 };
 
     let vector_arr: Vec<Direction> = buffered
         .lines()
@@ -134,7 +134,7 @@ fn logic(buffered: BufReader<File>) {
         })
         .collect();
 
-    let cells_visited: HashSet<RopeSection> = vector_arr
+    let cells_visited: HashSet<Knot> = vector_arr
         .iter()
         .flat_map(|direction| match direction {
             Direction::Up(steps) => std::iter::repeat(Direction::Up(1)).take(*steps as usize),
