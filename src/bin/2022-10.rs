@@ -1,12 +1,12 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader, Error};
-use std::{env, println, vec};
+use std::{env, print, println, vec};
 
 const INPUT_FILENAME: &str = "2022-10-input.txt";
 
 fn logic(buffered: BufReader<File>) {
-    let start_cycle = 20;
-    let cycle_interval = 40;
+    let start_cycle: i32 = 20;
+    let cycle_interval: i32 = 40;
 
     let vector_arr: Vec<_> = buffered
         .lines()
@@ -26,12 +26,12 @@ fn logic(buffered: BufReader<File>) {
         .collect();
 
     let signal_strength = vector_arr
-        .into_iter()
+        .iter()
         .enumerate()
         .fold(
             (1, 0),
             |(base_accumulator, multiplied_accumulator), (cycle, signal)| {
-                let adjusted_cycle = cycle + 1;
+                let adjusted_cycle = (cycle + 1) as i32;
 
                 let updated_base_accumulator = base_accumulator + signal;
                 let updated_multiplied_accumulator = if adjusted_cycle == start_cycle
@@ -47,7 +47,31 @@ fn logic(buffered: BufReader<File>) {
             },
         )
         .1;
-    println!("{:#?}", signal_strength)
+    println!(
+        "Part 1 | Sum of the six signal strengths: {}",
+        signal_strength
+    );
+
+    print!("Part 2 | Image rendered (8 capital letters)");
+    let mut register_x = 1;
+    for (cycle, signal) in vector_arr.iter().enumerate() {
+        let rendering_pixel = cycle as i32 % cycle_interval;
+
+        if (cycle as i32) % cycle_interval == 0 {
+            println!("");
+        }
+
+        let render_condition =
+            (rendering_pixel >= register_x - 1) && (rendering_pixel <= register_x + 1);
+
+        if render_condition {
+            print!("X");
+        } else {
+            print!(".");
+        }
+
+        register_x += signal;
+    }
 }
 
 fn main() -> Result<(), Error> {
