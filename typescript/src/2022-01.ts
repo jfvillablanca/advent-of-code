@@ -31,7 +31,7 @@ const logic = (input: string) => {
 const main = async () => {
     try {
         const input = await fs.promises.readFile(
-            path.join(__dirname, "../shared", inputFileName),
+            path.join(__dirname, "../../shared", inputFileName),
             "utf8"
         );
         logic(input);
