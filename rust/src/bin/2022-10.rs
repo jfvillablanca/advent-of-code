@@ -76,7 +76,7 @@ fn logic(buffered: BufReader<File>) {
 
 fn main() -> Result<(), Error> {
     let current_dir = env::current_dir()?;
-    let shared_path = current_dir.join("shared");
+    let shared_path = current_dir.join("../shared");
     let input_path = shared_path.join(INPUT_FILENAME);
     let input = File::open(input_path)?;
     let buffered = BufReader::new(input);
