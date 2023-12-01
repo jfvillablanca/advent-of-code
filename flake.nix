@@ -1,44 +1,49 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-    devshell.url = "github:numtide/devshell";
+    devenv.url = "github:cachix/devenv";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devshell, ... }:
-    flake-utils.lib.eachDefaultSystem (system: {
-      devShell =
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ devshell.overlays.default ];
-          };
-        in
-        pkgs.devshell.mkShell {
-          name = "rusty playground";
-          commands = [
-            {
-              name = "cargo";
-              package = pkgs.cargo;
-            }
-            {
-              name = "ts-node";
-              package = pkgs.nodePackages_latest.ts-node;
-            }
-          ];
-          packages = with pkgs; [
-            rustc
-            rustfmt
-            rust-analyzer
-            clippy
-
-            nodejs
-          ];
-          env = [ ];
+  outputs = { self, nixpkgs, devenv, flake-utils, ... } @ inputs:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
         };
-    });
+
+        cargo-pretty-test = pkgs.rustPlatform.buildRustPackage rec {
+          pname = "cargo-pretty-test";
+          version = "v0.2.3";
+          src = pkgs.fetchFromGitHub {
+            owner = "josecelano";
+            repo = "cargo-pretty-test";
+            rev = "main";
+            hash = "sha256-VnnhSgvNfqXLKTYe+Sef9H80+Ym7BBo7Jnfd2eMWF4U=";
+          };
+          cargoLock = {
+            lockFile = src + "/Cargo.lock";
+          };
+          doCheck = false;
+        };
+      in
+      {
+        devShells.default = devenv.lib.mkShell {
+          inherit inputs pkgs;
+          modules = [
+            {
+              languages = {
+                rust.enable = true;
+                javascript.enable = true;
+              };
+              packages = [ cargo-pretty-test ] ++
+                (with pkgs.nodePackages_latest; [
+                  ts-node
+
+                  yarn
+                ]);
+            }
+          ];
+        };
+      });
 }

@@ -1,7 +1,10 @@
+# Nix
 .direnv
+.devenv
+
+# JS
 node_modules
 
 
-# Added by cargo
-
+# Rust
 /target
