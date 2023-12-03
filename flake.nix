@@ -35,12 +35,31 @@
               languages = {
                 rust.enable = true;
                 javascript.enable = true;
+                python.enable = true;
               };
               packages = [ cargo-pretty-test ] ++
                 (with pkgs.nodePackages_latest; [
                   ts-node
 
                   yarn
+                ]) ++
+                (with pkgs.python3.pkgs; [
+                  python-lsp-server
+                  pylint
+                  black
+                  isort
+                  flake8
+                  flake8-length
+                  pytest
+                  mypy
+
+                  icecream
+                  asttokens
+                  colorama
+                  executing
+                  pygments
+
+                  six
                 ]);
             }
           ];
