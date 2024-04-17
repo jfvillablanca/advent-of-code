@@ -1,17 +1,25 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     devenv.url = "github:cachix/devenv";
   };
 
-  outputs = { self, nixpkgs, devenv, flake-utils, ... } @ inputs:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { devenv, flake-parts, ... } @ inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.devenv.flakeModule
+      ];
+      systems = ["x86_64-linux"];
+      perSystem = {
+        # config,
+        # self',
+        # inputs',
+        pkgs,
+        # system,
+        ...
+      }: 
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
-
         cargo-pretty-test = pkgs.rustPlatform.buildRustPackage rec {
           pname = "cargo-pretty-test";
           version = "v0.2.3";
@@ -28,14 +36,13 @@
         };
       in
       {
-        devShells.default = devenv.lib.mkShell {
-          inherit inputs pkgs;
-          modules = [
-            {
+        devenv.shells.default = {
+          name = "advent-of-code";
               languages = {
                 rust.enable = true;
                 javascript.enable = true;
                 python.enable = true;
+                nix.enable = true;
               };
               packages = [ cargo-pretty-test ] ++
                 (with pkgs.nodePackages_latest; [
@@ -61,8 +68,7 @@
 
                   six
                 ]);
-            }
-          ];
         };
-      });
+      };
+    };
 }
