@@ -5,8 +5,12 @@
     devenv.url = "github:cachix/devenv";
   };
 
-  outputs = { devenv, flake-parts, ... } @ inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = {
+    devenv,
+    flake-parts,
+    ...
+  } @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
         inputs.devenv.flakeModule
       ];
@@ -18,8 +22,7 @@
         pkgs,
         # system,
         ...
-      }: 
-      let
+      }: let
         cargo-pretty-test = pkgs.rustPlatform.buildRustPackage rec {
           pname = "cargo-pretty-test";
           version = "v0.2.3";
@@ -34,40 +37,43 @@
           };
           doCheck = false;
         };
-      in
-      {
+      in {
         devenv.shells.default = {
           name = "advent-of-code";
-              languages = {
-                rust.enable = true;
-                javascript.enable = true;
-                python.enable = true;
-                nix.enable = true;
-              };
-              packages = [ cargo-pretty-test ] ++
-                (with pkgs.nodePackages_latest; [
-                  ts-node
+          languages = {
+            rust.enable = true;
+            javascript.enable = true;
+            python.enable = true;
+            nix.enable = true;
+          };
+          packages =
+            [cargo-pretty-test]
+            ++ (with pkgs; [
+              alejandra
+            ])
+            ++ (with pkgs.nodePackages_latest; [
+              ts-node
 
-                  yarn
-                ]) ++
-                (with pkgs.python3.pkgs; [
-                  python-lsp-server
-                  pylint
-                  black
-                  isort
-                  flake8
-                  flake8-length
-                  pytest
-                  mypy
+              yarn
+            ])
+            ++ (with pkgs.python3.pkgs; [
+              python-lsp-server
+              pylint
+              black
+              isort
+              flake8
+              flake8-length
+              pytest
+              mypy
 
-                  icecream
-                  asttokens
-                  colorama
-                  executing
-                  pygments
+              icecream
+              asttokens
+              colorama
+              executing
+              pygments
 
-                  six
-                ]);
+              six
+            ]);
         };
       };
     };
