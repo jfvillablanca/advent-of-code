@@ -1,0 +1,2 @@
+run AOC:
+    @ts-node src/{{AOC}}.ts

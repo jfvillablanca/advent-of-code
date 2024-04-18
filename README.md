@@ -1,24 +1,36 @@
-## To run specific code (e.g. solution for 202X-XX)
+## To run specific code by language: 
+
+#### If you're a Nix enjoyer like I am
+```console
+nix develop
+# or just use direnv
+```
+This will create a developer environment that includes `just`, `cargo`, `python`, etc.
+
+#### Otherwise, you have to install language-specific tools + `just` (optional)
+
+### To run the solution for the 1st day of AOC 2022
+
+> Note: I haven't solved everything lmao, check the summary below on the challenges I finished and on which language I have finished it
+
+First, `cd` to the root of this repo, then
 
 ### Typescript
 
 ```console
-cd typescript
-ts-node src/202X-XX.ts
+just typescript/run 2022-01
 ```
 
 ### Rust
 
 ```console
-cd rust
-cargo run --bin 202X-XX
+just rust/run 2022-01
 ```
 
 ### Python
 
 ```console
-cd python
-python src/202X-XX.py
+just python/run 2022-01
 ```
 
 <summary><h2>Summary</h2></summary>

@@ -49,6 +49,7 @@
           packages =
             [cargo-pretty-test]
             ++ (with pkgs; [
+              just
               alejandra
             ])
             ++ (with pkgs.nodePackages_latest; [

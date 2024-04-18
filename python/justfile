@@ -1,0 +1,2 @@
+run AOC:
+    @python src/{{AOC}}.py
