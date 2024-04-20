@@ -33,6 +33,12 @@ just rust/run 2022-01
 just python/run 2022-01
 ```
 
+### Go
+
+```console
+just go/run 2022-01
+```
+
 <summary><h2>Summary</h2></summary>
 <details>
 

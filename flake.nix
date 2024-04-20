@@ -45,11 +45,13 @@
             javascript.enable = true;
             python.enable = true;
             nix.enable = true;
+            go.enable = true;
           };
           packages =
             [cargo-pretty-test]
             ++ (with pkgs; [
               just
+              gofumpt
               alejandra
             ])
             ++ (with pkgs.nodePackages_latest; [

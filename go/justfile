@@ -1,0 +1,2 @@
+run AOC:
+    @go run src/{{AOC}}/main.go
