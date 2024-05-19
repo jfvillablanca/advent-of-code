@@ -213,6 +213,8 @@ fn logic(buffered: BufReader<File>) {
 
     // assert_eq!(cells_visited.len(), 5683);
     assert_eq!(cells_visited.len(), 36);
+    // TODO: Part 2 is unfinished
+    assert_eq!(1, 2)
 }
 
 // fn process(current_section: &RopeSection, direction: &Direction) -> RopeSection {
